@@ -8,7 +8,8 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 
 // db setup
-mongoose.connect('mongodb://localhost:auth/auth', {useNewUrlParser: true})
+mongoose.connect('mongodb://localhost:27017/gardenpal', {useNewUrlParser: true})
+    .then(console.log('MongoDB connected'))
 
 // App setup
 app.use(morgan('combined'))
