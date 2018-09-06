@@ -1,10 +1,15 @@
 const jwt = require('jwt-simple')
 const User = require('../models/user')
+const Garden = require('../models/garden')
 const config = require('../config')
 
 function tokenForUser(user) {
     const timestamp = new Date().getTime()
     return jwt.encode({sub: user.id, iat: timestamp}, config.secret)
+}
+
+function userIdFromToken(token) {
+    return jwt.decode(token, config.secret).sub
 }
 
 exports.signin = function(req, res, next) { 
@@ -33,7 +38,8 @@ exports.signup = function(req, res, next) {
         // If a user with email does NOT exist, create and save user record
         const user = new User({
             email: email,
-            password: password
+            password: password,
+            activeGarden: null
         })
 
         user.save(function(err) {
@@ -43,4 +49,24 @@ exports.signup = function(req, res, next) {
             res.json({ token: tokenForUser(user) })
         })
     })
+}
+
+exports.activateGarden = function(req, res, next) {
+    const userId = userIdFromToken(req.body.token)
+    console.log("userId: " + userId)
+    const gardenId = req.body.gardenId
+    console.log("gardenId: " + gardenId)
+    // Update user document with active garden ObjectId
+    User.findByIdAndUpdate(userId, {activeGarden: gardenId}, err => {
+        if (err) return next(err)
+    })
+    // then find the corresponding garden and return it
+    .then(user => {
+        Garden.findById(user.activeGarden, (err, garden) => {
+            if (err) return next(err)
+            console.log(garden)
+            res.send(garden)
+        })
+    })
+    .catch(err => next(err))
 }

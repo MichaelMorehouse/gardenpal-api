@@ -14,5 +14,6 @@ module.exports = function(app) {
     app.post('/signin', requireSignin, Authentication.signin)
     app.post('/signup', Authentication.signup)
     app.post('/gardencreate', Garden.gardenCreate)
-    app.get('/gardenlist', Garden.gardenFetchAll)
+    app.post('/gardenlist', Garden.gardenFetchAll)
+    app.post('/activategarden', Authentication.activateGarden)
 }

@@ -4,7 +4,11 @@ const bcrypt = require('bcrypt-nodejs')
 
 const userSchema = new Schema({
     email: { type: String, unique: true, lowercase: true },
-    password: String
+    password: String,
+    activeGarden: {
+        type: Schema.Types.ObjectId,
+        required: false
+    }
 })
 
 // On Save hook, encrypt password
@@ -36,4 +40,6 @@ userSchema.methods.comparePassword = function(candidatePassword, callback) {
     })
 }
 
-module.exports = mongoose.model('user', userSchema)
+const UserModel = mongoose.model('user', userSchema)
+
+module.exports = UserModel

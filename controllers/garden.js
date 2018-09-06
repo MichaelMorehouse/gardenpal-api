@@ -1,17 +1,24 @@
 const Garden = require('../models/garden')
-const Plant = require('../models/plant')
+const jwt = require('jwt-simple')
+const config = require('../config')
+
+function userIdFromToken(token) {
+    return jwt.decode(token, config.secret).sub
+}
 
 exports.gardenCreate = function(req, res, next) {
     const newGarden = {...req.body}
     console.log(newGarden)
+    const userId = userIdFromToken(req.body.token)
 
     var gardenDoc = new Garden({
+        userId: userId,
         name: newGarden.name,
         location: newGarden.location,
         dateCreated: new Date(),
         gardenX: newGarden.gardenX,
         gardenY: newGarden.gardenY,
-        plants: []
+        plants: null
     })
 
     gardenDoc.save(err => {
@@ -22,8 +29,12 @@ exports.gardenCreate = function(req, res, next) {
 }
 
 exports.gardenFetchAll = function(req, res, next) {
-    Garden.find({location: 'Vancouver WA'}, err => {
+    const userId = userIdFromToken(req.body.token)
+    console.log(userId)
+    Garden.find({userId: userId}, err => {
         if (err) return next(err)
     })
-    .then(result => res.send(result))
+    .then(gardens => {
+        res.send(gardens)
+    })
 }
