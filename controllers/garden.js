@@ -1,4 +1,5 @@
 const Garden = require('../models/garden')
+const User = require('../models/user')
 const jwt = require('jwt-simple')
 const config = require('../config')
 
@@ -18,7 +19,7 @@ exports.gardenCreate = function(req, res, next) {
         dateCreated: new Date(),
         gardenX: newGarden.gardenX,
         gardenY: newGarden.gardenY,
-        plants: null
+        plants: []
     })
 
     gardenDoc.save(err => {
@@ -36,5 +37,19 @@ exports.gardenFetchAll = function(req, res, next) {
     })
     .then(gardens => {
         res.send(gardens)
+    })
+}
+
+exports.confirmPlantChanges = (req, res, next) => {
+    const userId = userIdFromToken(req.body.token)
+    const { plantChanges } = req.body
+    User.findById(userId, (err, user) => {
+        if (err) return next(err)
+        Garden.findByIdAndUpdate(user.activeGarden, {$push:{plants: plantChanges}}, err => {if (err) next(err)})
+        .then(garden => {
+            res.send(garden)
+            console.log(garden)
+        })
+        .catch(err=> {if (err) next(err)})
     })
 }
