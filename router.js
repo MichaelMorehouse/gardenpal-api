@@ -11,6 +11,7 @@ module.exports = function(app) {
     app.get('/', requireAuth, function(req, res) {
         res.send({hi: 'there'})
     })
+    app.post('/fetchgarden', Garden.fetchGarden)
     app.post('/signin', requireSignin, Authentication.signin)
     app.post('/signup', Authentication.signup)
     app.post('/gardencreate', Garden.gardenCreate)

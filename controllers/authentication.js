@@ -39,7 +39,7 @@ exports.signup = function(req, res, next) {
         const user = new User({
             email: email,
             password: password,
-            activeGarden: null
+            activeGarden: {}
         })
 
         user.save(function(err) {

@@ -53,3 +53,17 @@ exports.confirmPlantChanges = (req, res, next) => {
         .catch(err=> {if (err) next(err)})
     })
 }
+
+exports.fetchGarden = (req,res,next) => {
+    const userId = userIdFromToken(req.body.token)
+    User.findById(userId, (err, user) => {
+        if (err) return next(err)
+        Garden.findById(user.activeGarden, err => 
+            {if (err) next(err)})
+        .then(garden => {
+            res.send(garden)
+            console.log(garden)
+        })
+        .catch(err=> {if (err) next(err)})
+    })
+}
