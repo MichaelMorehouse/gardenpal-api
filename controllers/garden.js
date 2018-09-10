@@ -1,7 +1,6 @@
 const Garden = require('../models/garden')
 const User = require('../models/user')
 const jwt = require('jwt-simple')
-const config = require('../config')
 
 function userIdFromToken(token) {
     return jwt.decode(token, process.env.SECRET).sub
