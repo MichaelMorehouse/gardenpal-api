@@ -4,7 +4,7 @@ const jwt = require('jwt-simple')
 const config = require('../config')
 
 function userIdFromToken(token) {
-    return jwt.decode(token, config.secret).sub
+    return jwt.decode(token, process.env.SECRET).sub
 }
 
 exports.gardenCreate = function(req, res, next) {

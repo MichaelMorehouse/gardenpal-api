@@ -5,11 +5,11 @@ const config = require('../config')
 
 function tokenForUser(user) {
     const timestamp = new Date().getTime()
-    return jwt.encode({sub: user.id, iat: timestamp}, config.secret)
+    return jwt.encode({sub: user.id, iat: timestamp}, process.env.SECRET)
 }
 
 function userIdFromToken(token) {
-    return jwt.decode(token, config.secret).sub
+    return jwt.decode(token, process.env.SECRET).sub
 }
 
 exports.signin = function(req, res, next) { 
