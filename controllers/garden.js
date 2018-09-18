@@ -23,9 +23,8 @@ exports.gardenCreate = function(req, res, next) {
 
     gardenDoc.save(err => {
         if (err) return next(err)
+        res.status(200).send()
     })
-    .then(res.status(200))
-    .catch(err => next(err))
 }
 
 exports.gardenFetchAll = function(req, res, next) {
@@ -42,6 +41,7 @@ exports.gardenFetchAll = function(req, res, next) {
 exports.confirmPlantChanges = (req, res, next) => {
     const userId = userIdFromToken(req.body.token)
     const { plantChanges } = req.body
+    
     User.findById(userId, (err, user) => {
         if (err) return next(err)
         Garden.findByIdAndUpdate(user.activeGarden, {$push:{plants: plantChanges}}, err => {if (err) next(err)})
