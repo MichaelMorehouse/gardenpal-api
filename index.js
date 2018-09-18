@@ -8,7 +8,8 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 
 // db setup
-const mongoDB = process.env.MONGODB_URI || 'mongodb://localhost:27017/gardenpal'
+const mongoDB = process.env.MONGODB_URI
+
 mongoose.connect(mongoDB, {useNewUrlParser: true})
     .then(console.log('MongoDB connected'))
 
