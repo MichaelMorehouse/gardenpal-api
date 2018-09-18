@@ -23,9 +23,9 @@ exports.gardenCreate = function(req, res, next) {
 
     gardenDoc.save(err => {
         if (err) return next(err)
-
-        console.log('success')
     })
+    .then(res.status(200))
+    .catch(err => next(err))
 }
 
 exports.gardenFetchAll = function(req, res, next) {
