@@ -53,7 +53,7 @@ exports.fetchGarden = (req,res,next) => {
     const userId = userIdFromToken(req.body.token)
     User.findById(userId, function(err, user) {
         if (err) next(err)
-        Garden.findById(user.activeGarden, function(err) {
+        Garden.findById(user.activeGarden, function(err, garden) {
             if (err) next(err)
             res.send(garden)
         })

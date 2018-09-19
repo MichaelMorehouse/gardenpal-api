@@ -55,7 +55,7 @@ exports.activateGarden = function(req, res, next) {
     const gardenId = req.body.gardenId
     console.log("gardenId: " + gardenId)
     // Update user document with active garden ObjectId
-    User.findByIdAndUpdate(userId, { activeGarden: gardenId }, function(err) {
+    User.findByIdAndUpdate(userId, { activeGarden: gardenId }, function(err, user) {
         if (err) next(err)
         // then find the corresponding garden and return it
         Garden.findById(user.activeGarden, function(err, garden) {
