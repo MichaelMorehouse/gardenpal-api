@@ -21,8 +21,8 @@ exports.gardenCreate = function(req, res, next) {
         plants: []
     })
 
-    gardenDoc.save(err => {
-        if (err) return next(err)
+    gardenDoc.save(function(err) {
+        if (err) next(err)
         res.status(200).send()
     })
 }
@@ -30,19 +30,17 @@ exports.gardenCreate = function(req, res, next) {
 exports.gardenFetchAll = function(req, res, next) {
     const userId = userIdFromToken(req.body.token)
     console.log(userId)
-    Garden.find({userId: userId}, err => {
-        if (err) return next(err)
-    })
-    .then(gardens => {
+    Garden.find({ userId: userId }, function(err, gardens) {
+        if (err) next(err)
         res.send(gardens)
     })
 }
 
-exports.confirmPlantChanges = (req, res, next) => {
+exports.confirmPlantChanges = function(req, res, next) {
     const userId = userIdFromToken(req.body.token)
     const {plantChanges} = req.body
     
-    User.findById(userId, (err, user) => {
+    User.findById(userId, function(err, user) {
         if (err) return next(err)
         Garden.findByIdAndUpdate(user.activeGarden, {$push: {plants: plantChanges}}, function(err) {
             if (err) next(err)
@@ -53,14 +51,11 @@ exports.confirmPlantChanges = (req, res, next) => {
 
 exports.fetchGarden = (req,res,next) => {
     const userId = userIdFromToken(req.body.token)
-    User.findById(userId, (err, user) => {
-        if (err) return next(err)
-        Garden.findById(user.activeGarden, err => 
-            {if (err) next(err)})
-        .then(garden => {
+    User.findById(userId, function(err, user) {
+        if (err) next(err)
+        Garden.findById(user.activeGarden, function(err) {
+            if (err) next(err)
             res.send(garden)
-            console.log(garden)
         })
-        .catch(err=> {if (err) next(err)})
     })
 }

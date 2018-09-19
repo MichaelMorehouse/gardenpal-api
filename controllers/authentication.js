@@ -42,8 +42,7 @@ exports.signup = function(req, res, next) {
         })
 
         user.save(function(err) {
-            if (err) {return next(err)}
-
+            if (err) next(err)
             // Respond to request indicating the user was created
             res.json({ token: tokenForUser(user) })
         })
@@ -56,16 +55,13 @@ exports.activateGarden = function(req, res, next) {
     const gardenId = req.body.gardenId
     console.log("gardenId: " + gardenId)
     // Update user document with active garden ObjectId
-    User.findByIdAndUpdate(userId, {activeGarden: gardenId}, err => {
-        if (err) return next(err)
-    })
-    // then find the corresponding garden and return it
-    .then(user => {
-        Garden.findById(user.activeGarden, (err, garden) => {
-            if (err) return next(err)
+    User.findByIdAndUpdate(userId, { activeGarden: gardenId }, function(err) {
+        if (err) next(err)
+        // then find the corresponding garden and return it
+        Garden.findById(user.activeGarden, function(err, garden) {
+            if (err) next(err)
             console.log(garden)
             res.send(garden)
         })
     })
-    .catch(err => next(err))
 }
