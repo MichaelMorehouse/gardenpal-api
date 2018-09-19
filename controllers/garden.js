@@ -40,16 +40,14 @@ exports.gardenFetchAll = function(req, res, next) {
 
 exports.confirmPlantChanges = (req, res, next) => {
     const userId = userIdFromToken(req.body.token)
-    const { plantChanges } = req.body
+    const {plantChanges} = req.body
     
     User.findById(userId, (err, user) => {
         if (err) return next(err)
-        Garden.findByIdAndUpdate(user.activeGarden, {$push:{plants: plantChanges}}, err => {if (err) next(err)})
-        .then(garden => {
-            res.send(garden)
-            console.log(garden)
+        Garden.findByIdAndUpdate(user.activeGarden, {$push: {plants: plantChanges}}, function(err) {
+            if (err) next(err)
+            res.status(200).send()
         })
-        .catch(err=> {if (err) next(err)})
     })
 }
 
